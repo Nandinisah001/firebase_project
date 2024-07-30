@@ -7,14 +7,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'login_page.dart';
 
-class Demo extends StatefulWidget {
-  const Demo({super.key});
+class HomeDemoScreen extends StatefulWidget {
+  const HomeDemoScreen({super.key});
 
   @override
-  State<Demo> createState() => _DemoState();
+  State<HomeDemoScreen> createState() => _HomeDemoScreenState();
 }
 
-class _DemoState extends State<Demo> {
+class _HomeDemoScreenState extends State<HomeDemoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

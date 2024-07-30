@@ -1,48 +1,39 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_project/databaseWithApi/home_api_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login_page.dart';
+import 'home_api_screen.dart';
+import 'notifier_class.dart';
 
-
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      checkLoginStatus();
-    });
-  }
-
-  void checkLoginStatus() {
-    var traditional=FirebaseAuth.instance;
-    if (traditional.currentUser !=null) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => EshopLogin()),
-            (Route<dynamic> route) => false,
-      );
-    } else {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Demo()),
-            (Route<dynamic> route) => false,
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // Accessing ShopAuthProvider instance
+    final shopAuthProvider = Provider.of<ShopAuthProvider>(context, listen: false);
+
+    // Delay for 2 seconds before deciding navigation
+    Future.delayed(const Duration(seconds: 2), () async {
+      // Check if user is authenticated
+      bool isAuthenticated = await shopAuthProvider.isAuthenticated;
+
+      if (isAuthenticated) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) =>  EshopLogin()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeDemoScreen()),
+        );
+      }
+    });
+
     return const Scaffold(
       body: Center(
         child: FlutterLogo(
           style: FlutterLogoStyle.horizontal,
           size: 200,
-          textColor: Colors.green,
+          textColor: Colors.blue,
         ),
       ),
     );

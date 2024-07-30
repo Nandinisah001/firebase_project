@@ -62,6 +62,8 @@ dependencies:
   get: any
   http: any
   cached_network_image: ^3.3.1
+  provider: any
+  shared_preferences: any
 
 
 dev_dependencies:

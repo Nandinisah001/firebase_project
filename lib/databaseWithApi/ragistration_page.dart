@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:provider/provider.dart';
 import 'home_api_screen.dart';
 import 'login_page.dart';
+import 'notifier_class.dart';
+
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -12,7 +13,7 @@ class Register extends StatefulWidget {
   State<Register> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> with ViewTextFild {
+class _RegisterState extends State<Register> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -32,22 +33,21 @@ class _RegisterState extends State<Register> with ViewTextFild {
               ),
             ),
             const SizedBox(height: 100),
-            viewTextFild("Name", _nameController),
-            viewTextFild("Email", _emailController),
-            viewTextFild("Password", _passwordController),
+            _viewTextField("Name", _nameController),
+            _viewTextField("Email", _emailController),
+            _viewTextField("Password", _passwordController),
             const SizedBox(height: 150),
-            viewButton(
+            _viewButton(
               "Sign Up",
               onPressed: () {
                 String name = _nameController.text.trim();
                 String email = _emailController.text.trim();
                 String password = _passwordController.text.trim();
+
                 if (name.isEmpty || email.isEmpty || password.isEmpty) {
                   Fluttertoast.showToast(
                     msg: "Please fill all fields",
-                    toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
                     backgroundColor: Colors.white,
                     textColor: Colors.red,
                     fontSize: 16.0,
@@ -55,15 +55,13 @@ class _RegisterState extends State<Register> with ViewTextFild {
                 } else if (password.length < 8) {
                   Fluttertoast.showToast(
                     msg: "Password must be at least 8 characters long",
-                    toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
                     backgroundColor: Colors.white,
                     textColor: Colors.red,
                     fontSize: 16.0,
                   );
                 } else {
-                  registerUser(name, email, password);
+                  _signUpUser(context, name, email, password);
                 }
               },
             ),
@@ -74,7 +72,7 @@ class _RegisterState extends State<Register> with ViewTextFild {
                 const Text("Already have an account? ", style: TextStyle(color: Colors.black)),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const EshopLogin()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  EshopLogin()));
                   },
                   child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.indigo)),
                 ),
@@ -86,46 +84,23 @@ class _RegisterState extends State<Register> with ViewTextFild {
     );
   }
 
-  Future<void> registerUser(String name, String email, String password) async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  void _signUpUser(BuildContext context, String name, String email, String password) {
+    final authProvider = Provider.of<ShopAuthProvider>(context, listen: false);
 
-    try {
-      var userData = await _firestore.collection("usersauth").where("usersEmail", isEqualTo: email).get();
-      if (userData.docs.isNotEmpty) {
-        Fluttertoast.showToast(
-          msg: "Already exists",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.white,
-          textColor: Colors.red,
-          fontSize: 16.0,
-        );
-      } else {
-        await _firestore.collection("usersauth").add({
-          "usersName": name,
-          "usersEmail": email,
-          "usersPassword": password,
-        });
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Demo()));
-      }
-    } catch (e) {
-      print("Error registering user: $e");
+    authProvider.signUp(email, password).then((_) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeDemoScreen()));
+    }).catchError((error) {
       Fluttertoast.showToast(
-        msg: "Error registering user",
-        toastLength: Toast.LENGTH_SHORT,
+        msg: "Failed to register: $error",
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0,
       );
-    }
+    });
   }
-}
 
-mixin ViewTextFild {
-  Widget viewTextFild(String name, TextEditingController controller) {
+  Widget _viewTextField(String name, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -136,7 +111,7 @@ mixin ViewTextFild {
             height: 38,
             child: TextField(
               controller: controller,
-              obscureText: name == "Password", // Hide text for password
+              obscureText: name == "Password",
               decoration: InputDecoration(
                 hintText: name,
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
@@ -148,7 +123,7 @@ mixin ViewTextFild {
     );
   }
 
-  Widget viewButton(String name, {required void Function()? onPressed}) {
+  Widget _viewButton(String name, {required void Function()? onPressed}) {
     return MaterialButton(
       height: 40,
       minWidth: 200,
