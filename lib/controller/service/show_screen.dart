@@ -14,7 +14,7 @@ class TaskListScreen extends StatefulWidget {
   _TaskListScreenState createState() => _TaskListScreenState();
 }
 
-class _TaskListScreenState extends State<TaskListScreen> {
+class _TaskListScreenState extends State  <TaskListScreen> {
   ConnectivityResult _connectivityStatus = ConnectivityResult.none;
   late Connectivity _connectivity;
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -76,7 +76,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         title: Center(child: Text('Show Task')),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),5
             child: Center(
               child: _connectivityStatus == ConnectivityResult.wifi
                   ? const Icon(Icons.wifi, color: Colors.green)
