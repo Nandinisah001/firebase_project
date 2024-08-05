@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'controller/service/show_screen.dart';
 import 'databaseWithApi/notifier_class.dart';
-import 'databaseWithApi/splace_screen.dart';
-import 'firebase_options.dart';
+ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ShopAuthProvider(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: TaskListScreen(),
       ),
     );
   }

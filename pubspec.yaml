@@ -39,8 +39,8 @@ dependencies:
   firebase_auth:
   google_sign_in: ^5.4.0
   cloud_firestore: any
-  fluttertoast: any
-  image_picker: any
+
+
   firebase_storage: any
   file_picker: any
   flutter_pdfview: ^1.0.6
@@ -50,21 +50,29 @@ dependencies:
   video_player: any
   emoji_picker_flutter: ^2.2.0
   flutter_local_notifications: any
-  permission_handler: ^10.2.0
+
   firebase_messaging: any
   share_plus:
   firebase_dynamic_links: any
   google_maps_flutter: ^2.0.10
-  location: any
+
   geolocator: any
-  geocoding: ^3.0.0
+  fluttertoast: any
   flutter_spinkit: any
   get: any
   http: any
   cached_network_image: ^3.3.1
-  provider: any
-  shared_preferences: any
 
+  shared_preferences: any
+  permission_handler: any
+  provider: any
+  camera: any
+
+  image_picker: any
+  sqflite: any
+  location: any
+  geocoding: any
+  connectivity: any
 
 dev_dependencies:
   flutter_test:
